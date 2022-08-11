@@ -1,0 +1,25 @@
+- name: install cri-o
+  shell: |
+      dnf module -y install cri-o:1.23/default
+- name: enable crio
+  shell: systemctl enable --now crio
+- name: install kubeadm,kubectl and kubelet
+  shell: dnf -y install kubernetes-kubeadm kubernetes-node kubernetes-client cri-tools iproute-tc container-selinux 
+- name: konfig kubelet
+  shell: |
+     cp kubelet /etc/kubernetes/kubelet
+     cp kubeadm.conf /etc/systemd/system/kubelet.service.d/kubeadm.conf
+     systemctl enable kubelet
+- name: start kubelet service
+  shell: systemctl start kubelet
+- name: init kubeadm
+  shell: kubeadm init
+  register: out
+- debug: var=out.stdout_lines
+- name: config master node 
+  shell: |
+     mkdir -p $HOME/.kube
+     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+     sudo chown $(id -u):$(id -g) $HOME/.kube/config
+- name : taint master node
+  shell: kubectl taint nodes --all node-role.kubernetes.io/control-plane-

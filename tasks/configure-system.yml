@@ -1,0 +1,22 @@
+- name: create conf file
+  shell: |
+     cat > /etc/sysctl.d/99-k8s-cri.conf <<EOF
+     net.bridge.bridge-nf-call-iptables=1
+     net.ipv4.ip_forward=1
+     net.bridge.bridge-nf-call-ip6tables=1
+     EOF 
+- name: echo k8s.conf
+  shell: echo -e overlay\\nbr_netfilter > /etc/modules-load.d/k8s.conf 
+- name: set swap off
+  shell: touch /etc/systemd/zram-generator.conf
+- name: switch to Cgroup v1
+  shell: grubby --update-kernel ALL --args systemd.unified_cgroup_hierarchy=0
+- name: disable sy7stemd and firewalled
+  shell: |
+      systemctl disable --now firewalld
+      systemctl disable --now systemd-resolved
+- name : configure network
+  shell: |
+      cp NetworkManager.conf /etc/NetworkManager/NetworkManager.conf
+      unlink /etc/resolv.conf
+      touch /etc/resolv.conf
