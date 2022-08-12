@@ -1,0 +1,4 @@
+- name: install podman
+  shell: |
+    dnf -y install podman
+    systemctl start podman

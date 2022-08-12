@@ -1,0 +1,4 @@
+- name: install gitlab in kubernetes 
+  shell: |
+     kubectl create -f gitlab/deployment.yaml
+     kubectl create -f gitlab/service.yaml

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  labels:
+    app: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-pods
+  template:
+    metadata:
+      labels:
+        app: db-pods
+    spec:
+      containers:
+      - name: mlflow-db
+        image: mysql/mysql-server:5.7.28
+        env:
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: mlflow-db-configmap
+                key: MYSQL_DATABASE
+          - name: MYSQL_USER
+            valueFrom:
+              configMapKeyRef:
+                name: mlflow-db-configmap
+                key: MYSQL_USER
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mlflow-db-configmap
+                key: MYSQL_PASSWORD
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mlflow-db-configmap
+                key: MYSQL_ROOT_PASSWORD
+        volumeMounts:
+          - name: sql-data
+            mountPath: /var/lib/mysql
+        ports:
+        - containerPort: 3306
+      volumes:
+         - name: sql-data
+           emptyDir: {}
+      
+      
+
+        
+        
+          

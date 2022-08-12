@@ -1,0 +1,18 @@
+stages:
+  - build
+  - test
+
+build-code-job:
+  stage: build
+  script:
+    - echo "Check the ruby version, then build some Ruby project files:"
+
+test-code-job1:
+  stage: test
+  script:
+    - python download.py
+
+test-code-job2:
+  stage: test
+  script:
+    - ls

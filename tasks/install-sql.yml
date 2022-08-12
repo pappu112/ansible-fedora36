@@ -1,0 +1,5 @@
+- name: install minio
+  shell: |
+    kubectl create -f sql/mlflow-db-configmap.yaml
+    kubectl create -f sql/deployment.yaml
+    kubectl expose deploy db --port=3306

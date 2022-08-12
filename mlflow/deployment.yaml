@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow
+  labels:
+    app: mlflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: mlflow-pods
+  template:
+    metadata:
+      labels:
+         app: mlflow-pods
+    spec:
+      containers:
+      - name: mlflow-pod
+        image: pappu112/mlflow
+        imagePullPolicy: Always
+        env:
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              configMapKeyRef:
+                 name: mlflow-configmap
+                 key: AWS_ACCESS_KEY_ID
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              configMapKeyRef:
+                 name: mlflow-configmap
+                 key: AWS_SECRET_ACCESS_KEY
+          - name: AWS_DEFAULT_REGION
+            valueFrom:
+              configMapKeyRef:
+                 name: mlflow-configmap
+                 key: AWS_DEFAULT_REGION
+          - name: MLFLOW_S3_ENDPOINT_URL
+            valueFrom:
+              configMapKeyRef:
+                 name: mlflow-configmap
+                 key: MLFLOW_S3_ENDPOINT_URL
+        ports:
+          - containerPort: 5000
+
+
+        
+        
+        

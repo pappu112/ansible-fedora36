@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mlflow-db-configmap
+data:
+  MYSQL_DATABASE: "mlflow"
+  MYSQL_USER: "mlflow_user"
+  MYSQL_PASSWORD: "mlflow_password"
+  MYSQL_ROOT_PASSWORD: "toor"
+  

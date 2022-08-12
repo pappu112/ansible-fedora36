@@ -1,0 +1,12 @@
+- name: add user
+  shell: adduser gitlab-runner
+- name: add user in group
+  shell: usermod -aG wheel gitlab-runner
+- name: add runner in sudo 
+  shell: cp sudoers /etc/sudoers
+- name: install runner
+  shell: |
+    curl -L --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+    chmod +x /usr/local/bin/gitlab-runner
+    gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+    gitlab-runner start

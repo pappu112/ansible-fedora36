@@ -1,3 +1,12 @@
+Need to add aws access key and access secret key in 
+
+minio/minio-configmap.yaml
+mlflow/mlflow-configmap.yaml
+myapp/download.py
+
+
+ 
+
 ### STEP 1: install as root
 
 ````
@@ -24,7 +33,7 @@ Enter to keep the current selection[+], or type selection number: 2
 dnf -y install ansible
 ````
 
-#### STEP 3: 
+#### STEP 3: Run ansible before reboot
 GO inside ansible folder 
 
 ````
@@ -33,9 +42,38 @@ ansible-playbook playbook-config.yml --ask-become-pass
 
 reboot
 
-#### STEP 4:
+#### STEP 4: Run ansible after reboot
 
 ````
 ansible-playbook playbook-install.yml --ask-become-pass
 ````
+
+#### STEP 5: Register runner 
+
+
+add in /etc/hosts
+<containme ip> gitlab-service.default 
+
+than 
+
+````
+gitlab-runner register
+````
+if runner not live 
+
+````
+gitlab-runner verify
+````
+#### STEP 6: upload model in gitlab project 
+upload  files in gitlab project
+train.py (in mlflow folder)
+kc_house_data.cvs(in mlflow floder)
+all file in my app folder in root directory on gitlab project
+
+Commit the files
+
+#### Step 10 : Run pipeline
+upload .gitlab-ci.yaml in gitlab project
+
+commit the file pipeline should run automitaclly after commit  
 

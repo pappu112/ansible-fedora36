@@ -1,0 +1,7 @@
+- name: install minio configmap
+  shell: |
+    kubectl create -f minio/minio-configmap.yaml
+- name: install minio deployment and svc
+  shell: |
+    kubectl create -f minio/deployment.yaml
+    kubectl create -f minio/service.yaml

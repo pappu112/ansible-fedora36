@@ -5,3 +5,26 @@
   become: true
   tasks:
     - include_tasks: tasks/install-kubernetes.yml
+    - include_tasks: tasks/install-gitlab.yml
+    - include_tasks: tasks/install-helm.yml
+    - include_tasks: tasks/install-podman.yml
+    - include_tasks: tasks/install-ingress.yml
+    - name: wait 5 min
+      pause: 
+        minutes: 5
+    - include_tasks: tasks/install-minio.yml
+    - name: wait 5 min
+      pause: 
+        minutes: 5
+    - include_tasks: tasks/install-sql.yml
+    - name: wait 5 min
+      pause: 
+        minutes: 5
+    - include_tasks: tasks/install-mlflow.yml
+    - name: wait 5 min
+      pause: 
+        minutes: 5
+    - include_tasks: tasks/deploy-myapp.yml
+    - include_tasks: tasks/install-runner.yml
+
+    
