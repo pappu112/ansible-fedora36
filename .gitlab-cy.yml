@@ -1,18 +1,27 @@
 stages:
+  - upload
+  - download
   - build
-  - test
+  - deploy
 
-build-code-job:
-  stage: build
+upload-artifact-job:
+  stage: upload
   script:
-    - echo "Check the ruby version, then build some Ruby project files:"
+    - sudo kubectl exec deployment/mlflow python train.py
 
-test-code-job1:
-  stage: test
+download-job1:
+  stage: download
   script:
     - python download.py
 
-test-code-job2:
-  stage: test
+build-job:
+  stage: build
   script:
-    - ls
+    - sudo podman stop myapp
+    - sudo podman rm myapp
+    - sudo podman build -t myapp .
+deploy-job:
+  stage: deploy
+  script:
+      - sudo podman run -d -p 5000:5000 --name=myapp  myapp 
+
