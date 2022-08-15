@@ -82,7 +82,7 @@ go to gitlab folder amd run
 ````
 kubectl create -f ingress.yaml
 ````
-for browse withh https need to add host in /etc/hosts
+for browse with https need to add host in /etc/hosts
 ````
 127.0.0.1 nndata.mlopps.com
 ````
