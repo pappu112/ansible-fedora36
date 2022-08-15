@@ -72,8 +72,18 @@ all file in my app folder in root directory on gitlab project
 
 Commit the files
 
-#### Step 10 : Run pipeline
+#### STEP 10 : Run pipeline
 upload .gitlab-ci.yaml in gitlab project
 
 commit the file pipeline should run automitaclly after commit  
+ 
+#### STEP 11: ADD HTTPS IN GITLAB 
+go to gitlab folder amd run 
+````
+kubectl create -f ingress.yaml
+````
+for browse withh https need to add host in /etc/hosts
+````
+127.0.0.1 nndata.mlopps.com
+````
 
