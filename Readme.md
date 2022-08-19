@@ -1,11 +1,5 @@
-Need to add aws access key and access secret key in 
-
-minio/minio-configmap.yaml
-mlflow/mlflow-configmap.yaml
-myapp/download.py
-
-
- 
+Rename .env.templae to .env
+Add aws access key and access secret key in .env file 
 
 ### STEP 1: install as root
 
@@ -35,9 +29,12 @@ dnf -y install ansible
 
 #### STEP 3: Run ansible before reboot
 GO inside ansible folder 
+need to edit run_playbook.sh 
+Add root user and root user password in line 10.
 
 ````
-ansible-playbook playbook-config.yml --ask-become-pass
+chmod +x run_playbook.sh
+./run_playbook.sh
 ````
 
 reboot
