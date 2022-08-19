@@ -3,6 +3,11 @@
   hosts: localhost
   connection: local 
   become: true
+  vars:
+    aws_access_key: '{{ lookup("env", "AWS_ACCESS_KEY") }}'
+    aws_secret_key: '{{ lookup("env", "AWS_SCERET_KEY") }}'
+    bucket_name: '{{ lookup("env", "BUCKET_NAME") }}'
+    location: '{{ lookup("env", "BUCKET_LOCATION") }}'
   tasks:
     - include_tasks: tasks/install-kubernetes.yml
     - include_tasks: tasks/install-gitlab.yml
@@ -18,6 +23,19 @@
     - name: wait 5 min
       pause: 
         minutes: 5
+    - name: craete yaml file
+      shell: |
+        cat << EOF > minio-configmap.yaml
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: minio-configmap
+        data:
+          MINIO_ACCESS_KEY: "{{ aws_access_key }}"
+          ##This is the aws access key
+          MINIO_SECRET_KEY: "{{ aws_secret_key }}"
+          ##This is the aws sercter key
+        EOF
     - include_tasks: tasks/install-minio.yml
     - name: wait 5 min
       pause: 
@@ -26,10 +44,37 @@
     - name: wait 5 min
       pause: 
         minutes: 5
+    - name: craete mlflow configmap
+      shell: |
+        cat << EOF > mlflow-configmap.yaml
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: mlflow-configmap
+        data:
+          AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
+          AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"
+          AWS_DEFAULT_REGION: "{{ location }}"
+          MLFLOW_S3_ENDPOINT_URL: "http://s3:9000"
+        EOF
     - include_tasks: tasks/install-mlflow.yml
     - name: wait 5 min
       pause: 
         minutes: 5
+    - name: craete download.py
+      shell: |
+        cat << EOF > download.py
+        import os
+        import boto3
+        s3 = boto3.client('s3', aws_access_key_id="{{ aws_access_key }}", aws_secret_access_key="{{ aws_secret_key }}")
+        response = s3.list_objects_v2(Bucket="{{ bucket_name }}", Prefix='1')
+        all = response['Contents']
+        latest = max(all, key=lambda x: x['LastModified'])
+        res = str(latest['Key'])
+        x = res.split('/')
+        file_path = x[0]+'/'+x[1]+'/'+x[2]+'/'+x[3]+'/model.pkl'
+        s3.download_file("{{ bucket_name }}",file_path,'model.pkl')
+        EOF
     - include_tasks: tasks/deploy-myapp.yml
     - include_tasks: tasks/install-runner.yml
 

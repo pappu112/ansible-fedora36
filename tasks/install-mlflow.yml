@@ -1,5 +1,5 @@
 - name: install mlflow
   shell: |
-     kubectl create -f mlflow/mlflow-configmap.yaml
+     kubectl create -f mlflow-configmap.yaml
      kubectl create -f mlflow/deployment.yaml
      kubectl create -f mlflow/service.yaml

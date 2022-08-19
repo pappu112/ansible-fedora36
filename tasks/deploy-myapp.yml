@@ -4,8 +4,8 @@
   shell: pip install boto3
 - name: download model.pkl
   shell: |
-     cd myapp
      python download.py
+     mv model.pkl myapp/ 
 - name: deploy myapp
   shell: |
      cd myapp
